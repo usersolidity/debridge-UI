@@ -68,8 +68,7 @@ export class AppTransferComponent extends ComponentBase implements OnInit {
   isApproved: boolean = false;
 
   async ngOnInit() {
-    this.getAllPairs();
-
+    await this.web3Service.initWeb3();
     this.eventBus.loginEvent.subscribe(result => {
       console.log('loginEvent subscription:' + result);
       this.eventLogin(result);
@@ -80,9 +79,12 @@ export class AppTransferComponent extends ComponentBase implements OnInit {
       this.eventLogout();
     });
 
+    this.eventBus.fromPairChanged.subscribe(result => {
+      console.log('fromPairChanged subscription:' + result);
+      this.setPairFrom(result);
+    });
 
-    await this.web3Service.initWeb3();
-
+    this.getAllPairs();
   }
 
   async setPairFrom(pair: PairEventDTO): Promise<void> {
@@ -242,6 +244,7 @@ export class AppTransferComponent extends ComponentBase implements OnInit {
       backdropClass: 'dlg-select-coin-backdrop',
       panelClass: ['dlg-select-coin-panel']
     });
+    dialogRef.componentInstance.Pairs = this.allPairs.filter(t => t.chainId == this.web3Service.chainIdNumber);
 
     const source = dialogRef.afterClosed();
     const success$ = source

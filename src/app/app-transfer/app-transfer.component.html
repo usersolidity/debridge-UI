@@ -27,7 +27,7 @@
         <div class="__row-left-column">
           <input class="input" type="number" [(ngModel)]="inputAmount" min="0" />
         </div>
-        <div class="__row-currency __row-input">
+        <div class="__row-currency __row-input" (click)='selectCoin()'>
           <!--(click)='selectCoin()'-->
           <div>
             <div class="white_sircle">

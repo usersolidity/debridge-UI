@@ -1,26 +1,32 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { PairEventDTO } from '../../service-proxies/service-proxies';
+import { EventBus } from '../../shared/event-bus';
 
 import coins from './coins.data';
-  
+
 @Component({
-    selector: 'dlg-select-coin',
-    templateUrl: './dlg-select-coin.component.html',
-    styleUrls: ['./dlg-select-coin.component.scss'],
-    encapsulation: ViewEncapsulation.None
+  selector: 'dlg-select-coin',
+  templateUrl: './dlg-select-coin.component.html',
+  styleUrls: ['./dlg-select-coin.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class DlgSelectCoinComponent implements OnInit {
 
-    coins = coins;
+  @Input() Pairs: Array<PairEventDTO>;
 
-    constructor(
-        public dialogRef: MatDialogRef<DlgSelectCoinComponent>,
-    ) { }
+  coins = coins;
 
-    ngOnInit(): void {
-    }
+  constructor(
+    public dialogRef: MatDialogRef<DlgSelectCoinComponent>,
+    private eventBus: EventBus
+  ) { }
 
-    select(coin: any) {
-        this.dialogRef.close(coin);
-    }
+  ngOnInit(): void {
+  }
+
+  select(coin: any) {
+    this.eventBus.fromPairChanged.emit(coin);
+    this.dialogRef.close(coin);
+  }
 }

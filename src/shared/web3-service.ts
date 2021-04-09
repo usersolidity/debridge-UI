@@ -100,6 +100,7 @@ export class Web3Service {
 
 
   async initWeb3() {
+    console.log('initWeb3');
     this.ethereumProvider = await detectEthereumProvider();
     if (this.ethereumProvider) {
       this.web3 = new Web3(this.ethereumProvider);
@@ -115,7 +116,7 @@ export class Web3Service {
 
     else {
       //this.isWeb3Disabled = true;
-      if (!this.web3) {
+      if (!this.web3 || !this.web3.currentProvider) {
         this.setWeb3OnCustomRPC();
       }
     }
@@ -147,18 +148,6 @@ export class Web3Service {
       else
         this.web3 = new Web3("https://kovan.infura.io/v3/46e5f1638bb04dd4abb7f75bfd4f8898");
     }
-  }
-
-  public get getWeb3ForEvents(): Web3 {
-    //Work with our node for BSC MainNet
-    if (this.chainId === '0x38') {
-      if (!this.web3ForEvents) {
-        //this.web3ForEvents = new Web3('https://rpcbsc.tosdis.finance/');
-        this.web3ForEvents = new Web3('wss://wsbsc.tosdis.finance/');
-      }
-      return this.web3ForEvents;
-    }
-    return this.web3;
   }
 
 
@@ -197,7 +186,7 @@ export class Web3Service {
       if (this.userSessionProvider.getIsBSC)
         throw new ChainError(`Select BSC Network in your wallet.`);
       else
-        throw new ChainError(`Select Mainnet Network in your wallet.`);
+        throw new ChainError(`Select Kovan Network in your wallet.`);
 
       return false;
     }
