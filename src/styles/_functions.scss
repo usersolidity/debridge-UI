@@ -1,0 +1,7 @@
+@function reponsive-calc($startValue, $endValue, $minWidth, $maxWidth) {
+    $coefficient: ($startValue - $endValue) / ($maxWidth - $minWidth);
+
+    $result: calc(#{ $startValue } - #{ $coefficient } * (#{ $maxWidth } - 100vw));
+
+    @return $result;
+}

@@ -1,0 +1,89 @@
+<svg xmlns:xlink='http://www.w3.org/1999/xlink' aria-hidden='true' focusable='false' style='position: absolute; width: 0; height: 0; overflow: hidden;' version='1.1' xmlns='http://www.w3.org/2000/svg'>
+    <defs>
+        <marker id="marker-arrow-start" markerWidth="6.5" markerHeight="5.6" 
+        refX="0" refY="2.8" orient="auto">
+            <polygon points="6.5 0, 6.5 5.6, 0 2.8" fill="#FFFFFF" />
+        </marker>
+        <marker id="marker-arrow-end" markerWidth="6.5" markerHeight="5.6" 
+        refX="6.5" refY="2.8" orient="auto" markerUnits="strokeWidth">
+            <polygon points="0 0, 6.5 2.8, 0 5.6" fill="#FFFFFF" />
+        </marker>
+        <svg id='symbol-arrow-1' xmlns="http://www.w3.org/2000/svg">
+            <line stroke-dasharray="5, 5"  x1="0" y1="100%" x2="100%" y2="0"
+                stroke="#FFFFFF"
+                stroke-width="1"
+                marker-end="url(#marker-arrow-end)" marker-start="url(#marker-arrow-start)"
+            />
+        </svg>
+        <svg id='symbol-arrow-2' xmlns="http://www.w3.org/2000/svg">
+            <line stroke-dasharray="5, 5"  x1="0" y1="0" x2="100%" y2="100%"
+                stroke="#FFFFFF"
+                stroke-width="1"
+                marker-end="url(#marker-arrow-end)" marker-start="url(#marker-arrow-start)"
+            />
+        </svg>
+    </defs>
+</svg>
+<div class="oval1 __bg-block-item1"></div>
+<div class="oval2 __bg-block-item2"></div>
+<div class="__bg-block-item3"></div>
+<div class="__image-block">
+    <div class="__image-block-left">
+        <div class="__image-block-row">
+            <img class="__image-block-bsc" src="../../assets/svg/bsc.svg">
+            <span class="__image-block-text">BSC</span>
+        </div>
+        <div class='__arrow __arrow-left'>
+            <div class="__arrow-content"></div>
+            <svg style='width: 100%; height: 100%;'>
+                <use xlink:href='#symbol-arrow-2'></use>    
+            </svg>
+        </div>
+    </div>
+    <div class="__image-block-center">
+        <div>
+            <img class="__image-block-heco" src="../../assets/svg/heco.svg">
+            <span class="__image-block-text">HECO</span>
+        </div>
+        <div>
+            <div class='__arrow __arrow-top'>
+                <div class="__arrow-content"></div>
+                <svg style='width: 100%; height: 100%;'>
+                    <use xlink:href='#symbol-arrow-1'></use>    
+                </svg>
+            </div>
+        </div>
+        <div class="__image-block-circle">
+            <img src="../../assets/svg/diamond.svg">
+        </div>
+        <div>
+            <div class='__arrow __arrow-bottom'>
+                <div class="__arrow-content"></div>
+                <svg style='width: 100%; height: 100%;'>
+                    <use xlink:href='#symbol-arrow-1'></use>    
+                </svg>
+            </div>
+        </div>
+        <div>
+            <img class="__image-block-eth" src="../../assets/svg/eth.svg">
+            <span class="__image-block-text">ETHEREUM</span>
+        </div>
+    </div>
+    <div class="__image-block-right">
+        <div class='__arrow __arrow-right'>
+            <div class="__arrow-content"></div>
+            <svg style='width: 100%; height: 100%;'>
+                <use xlink:href='#symbol-arrow-1'></use>    
+            </svg>
+        </div>
+        <div class="__image-block-row">
+            <img class="__image-block-solana" src="../../assets/svg/solana.svg">
+            <span class="__image-block-text">SOLANA</span>
+        </div>
+    </div>
+</div>
+<span class="__content">Fully Decentralized and&nbsp;Anonymous Cross-chain Bridge</span>
+<a href="/transfer" class="__link">
+  <!--[routerLink]='["/transfer"]' need to reload-->
+  launch app
+</a>

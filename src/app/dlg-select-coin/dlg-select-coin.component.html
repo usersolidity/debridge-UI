@@ -1,0 +1,13 @@
+<header>
+    Select a coin
+    <button mat-button class="__close" [mat-dialog-close]="true">
+        <mat-icon>close</mat-icon>
+    </button>
+</header>
+<input placeholder='Search name' />
+<section class='__coins'>
+    <div class='__coin' *ngFor='let coin of coins' (click)='select(coin)'>
+        <img class='__coin-img' [src]='coin.img'>
+        {{ coin.name }}
+    </div>
+</section>

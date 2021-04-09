@@ -1,0 +1,161 @@
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@import '~@angular/material/theming';
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$debridge-ui-primary: mat-palette($mat-indigo);
+$debridge-ui-accent: mat-palette($mat-pink, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$debridge-ui-warn: mat-palette($mat-red);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$debridge-ui-theme: mat-light-theme((
+  color: (
+    primary: $debridge-ui-primary,
+    accent: $debridge-ui-accent,
+    warn: $debridge-ui-warn,
+  )
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($debridge-ui-theme);
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap');
+@import './styles/variables';
+@import './styles/button';
+@import './styles/input';
+@import './styles/select';
+@import './styles/functions';
+
+html, body {
+    margin: 0;
+    padding: 0;
+
+    // height: 100%;
+    min-height: 100%;
+    height: 100%;
+    font-family: "IBM Plex Mono", sans-serif;
+    overflow-x: hidden;
+}
+
+h2 {
+    margin: 0;
+    margin-bottom: 30px;
+
+    font-size: 36px;
+    line-height: 47px;
+    text-align: center;
+    color: $base-color;
+
+    @media (max-width: $breakpoint-tablet) {
+        margin-bottom: 20px;
+
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 31px;
+    }
+}
+
+.white_sircle {
+    display: flex;
+    justify-content: center;
+    margin-right: 8px;
+    padding: 6px;
+    width: 24px;
+    height: 24px;
+    box-sizing: border-box;
+    border-radius: 50%;
+
+    background-color: $base-color;
+}
+
+.oval1 {
+    position: absolute;
+    z-index: 5;
+
+    box-sizing: border-box;
+    // max-width: 1291px;
+    // width: 96%;
+    width: 100%;
+    max-width: 1290px;
+    height: 560px;
+
+    &:before {
+        content: '';
+
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 645px / 282px;
+
+        background: linear-gradient(180deg, #120824 100%, rgba(18, 8, 36, 0) 100%);
+        opacity: 0.5;
+    }
+
+    // If width less than 1410px
+    @media (max-width: 1410px) and (min-width: 480px) {
+        &:before {
+            border-radius: 645px / reponsive-calc(282px, 645px, 460px, 1410px);
+        }
+    }
+
+    @media(max-width: 480px) {
+        &:before {
+            border-radius: 645px / 645px;
+        }
+    }
+}
+
+.oval2 {
+    position: absolute;
+    z-index: 8;
+
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 1291px;
+    padding: 0 198px;
+    height: 560px;
+
+    &:before {
+        content: '';
+
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 447px / 282px;
+
+        background: linear-gradient(180deg, #120824 100%, rgba(18, 8, 36, 0) 100%);
+        opacity: 0.6;
+    }
+
+    // If width less than 1410px
+    @media (max-width: 1410px) and (min-width: 480px) {
+        padding: 0 reponsive-calc(198px, 40px, 460px, 1410px);
+
+        &:before {
+            border-radius: 447px / reponsive-calc(282px, 447px, 460px, 1410px);
+        }
+    }
+
+    @media(max-width: 480px) {
+        padding: 0 40px;
+
+        &:before {
+            border-radius: 447px / 447px;
+        }
+    }
+
+}

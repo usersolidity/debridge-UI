@@ -1,0 +1,66 @@
+<div class="__left-block">
+  <a class="__logo" [routerLink]='["/"]'>
+    <img src="../../assets/svg/logo.svg" />
+  </a>
+  <div class="__center-block">
+    <nav class="__navigation">
+      <a class="__navigation-link" href="https://docs.debridge.finance/" target="_blank" style="color: #fff; text-decoration:none; cursor:pointer">
+        <span class="__navigation-text">DOCS</span>
+      </a>
+      <!--<a class="__navigation-link">
+          <span class="__navigation-text">About</span>
+      </a>
+      <a class="__navigation-link">
+          <span class="__navigation-text">Dao</span>
+      </a>
+      <a class="__navigation-link">
+          <span class="__navigation-text">Api</span>
+      </a>
+      <a class="__navigation-link">
+          <span class="__navigation-text">Blog</span>
+      </a>
+      <a class="__navigation-link">
+          <span class="__navigation-text">Help</span>
+      </a>
+      <a class="__navigation-link">
+          <span class="__navigation-text">Forum</span>
+      </a>-->
+    </nav>
+    <!--<mat-select class="__select-cur"
+        [panelClass]='"mat-select-cur"'
+        disableOptionCentering
+        [(value)]='currency'
+    >
+        <mat-select-trigger>
+            <img class="__select-cur-icon" [src]='currency.img' />
+            <span class="__select-cur-text">BUY {{ currency.label }}</span>
+        </mat-select-trigger>
+        <mat-option *ngFor='let currency of currencies' [value]='currency'>
+            <img class="__select-cur-icon" [src]='currency.img' />
+            {{ currency.label }}
+        </mat-option>
+    </mat-select>-->
+  </div>
+</div>
+<div class="__right-block">
+  <app-wallet></app-wallet>
+  <a href="/transfer" class="__badge">
+    <!--[routerLink]='["/transfer"]' need to reload-->
+    <img class="__badge-icon" src="../../assets/svg/app.svg" />
+    <span class="__badge-text">launch app</span>
+  </a>
+  <mat-select class="__select-lan"
+              [panelClass]='"mat-select-lang"'
+              disableOptionCentering
+              [(value)]='lang'>
+    <mat-select-trigger>
+      <img [src]='lang.img' />
+      {{ lang.label }}
+    </mat-select-trigger>
+    <mat-option *ngFor='let lang of langs' [value]='lang'>
+      <img [src]='lang.img' />
+      {{ lang.label }}
+    </mat-option>
+  </mat-select>
+</div>
+<div class='__burger' (click)='toggleMenu()'></div>

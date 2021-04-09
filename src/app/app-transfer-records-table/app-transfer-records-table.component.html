@@ -1,0 +1,106 @@
+<mat-table [dataSource]='allEvents'  class="mat-elevation-z8">
+  <ng-container matColumnDef='id'>
+    <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+    <mat-cell *matCellDef='let row; let i = index'>
+      <div class="__header-mobile">#</div>
+      {{ i + 1 }}
+    </mat-cell>
+  </ng-container>
+
+
+
+  <!--displayedColumns: string[] = ['transactionHash', 'amount', 'nonce', 'tokenSymbol', 'isConfirmed'];-->
+  <ng-container matColumnDef='nonce'>
+    <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+    <mat-cell *matCellDef='let row'>
+      <div class="__header-mobile">#</div>
+      {{ row.nonce }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef='transactionHash'>
+    <mat-header-cell *matHeaderCellDef>TX</mat-header-cell>
+    <mat-cell *matCellDef='let row'>
+      <div class="__header-mobile">TX</div>
+      {{ row.transactionHash | shortTx}}
+    </mat-cell>
+  </ng-container>
+
+
+
+  <ng-container matColumnDef='tokenSymbol'>
+    <mat-header-cell *matHeaderCellDef>Token</mat-header-cell>
+    <mat-cell *matCellDef='let row'>
+      <div class="__header-mobile">Token</div>
+      {{ row.tokenSymbol }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef='amount'>
+    <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
+    <mat-cell *matCellDef='let row'>
+      <div class="__header-mobile">Amount</div>
+      {{ getAmount(row) | number: '1.0-18' }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef='submissionApproved'>
+    <mat-header-cell *matHeaderCellDef>Submission approved</mat-header-cell>
+    <mat-cell *matCellDef='let row'>
+      <div class="__header-mobile">Submission approved</div>
+      {{ row.submissionApproved |YesNo}}
+    </mat-cell>
+  </ng-container>
+
+  <!--<ng-container matColumnDef='isExecuted'>
+    <mat-header-cell *matHeaderCellDef>Executed</mat-header-cell>
+    <mat-cell *matCellDef='let row'>
+      <div class="__header-mobile">Executed</div>
+      {{ row.isExecuted }}
+    </mat-cell>
+  </ng-container>-->
+
+  <!--<ng-container matColumnDef='signed'>
+    <mat-header-cell *matHeaderCellDef>Signed</mat-header-cell>
+    <mat-cell *matCellDef='let row'>
+      <div class="__header-mobile">Signed</div>
+      <span>{{ row.signed }}</span>
+    </mat-cell>
+  </ng-container>-->
+  <ng-container matColumnDef='__breakpoint'>
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef='let row'></mat-cell>
+  </ng-container>
+  <ng-container matColumnDef='action'>
+    <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+    <mat-cell *matCellDef='let row'>
+      <div class="__header-mobile">Action</div>
+      <div *ngIf='!row.isExecuted && row.submissionApproved'>
+        <button *ngIf="web3ChainId == row.chainIdTo" (click)="claimClick(row)" [ngClass]="{'wait': waiting}" [disabled]="waiting"> 
+          Claim
+        </button>
+        <button *ngIf="web3ChainId != row.chainIdTo" (click)="switchNetworkClick()">
+          Select {{row.chainIdTo | networkSymbol}} network to claim
+        </button>
+      </div>
+      <div *ngIf='row.isExecuted'>
+        Executed
+      </div>
+      <div *ngIf='!row.submissionApproved'>
+        Awaiting approval
+      </div>
+
+      <!--<div *ngIf='row.action === "Recieved"'>{{ row.action }}</div>
+  <div *ngIf='row.action !== "Recieved"'>
+    <button>
+      {{ row.action }}
+    </button>
+  </div>-->
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef='displayedColumns'></mat-header-row>
+
+  <mat-row *matRowDef='let row; columns:displayedColumns;'></mat-row>
+
+</mat-table>

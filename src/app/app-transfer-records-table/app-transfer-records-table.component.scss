@@ -1,0 +1,155 @@
+@import '../../styles/variables';
+
+:host {
+    display: block;
+}
+
+mat-cell:nth-child(1),
+mat-header-cell:nth-child(1) {
+    max-width: 40px;
+
+    @media (max-width: $breakpoint-tablet) {
+        margin-left: 30px;
+        padding-left: 0;
+    }
+}
+
+mat-cell:nth-child(2),
+mat-header-cell:nth-child(2) {
+   /* max-width: 200px;*/
+}
+
+mat-cell:nth-child(3),
+mat-header-cell:nth-child(3) {
+   /* max-width: 200px;*/
+}
+
+mat-cell:nth-child(4),
+mat-header-cell:nth-child(4) {
+   /* max-width: 200px;*/
+
+    @media (max-width: $breakpoint-tablet) {
+        margin-right: 30px;
+        padding-right: 0;
+    }
+}
+
+mat-cell:nth-child(5),
+mat-header-cell:nth-child(5) {
+   /* max-width: 0;*/
+
+    @media (max-width: $breakpoint-tablet) {
+        flex-basis: calc(100% + 20px);
+        max-width: initial;
+        height: 0;
+        min-height: initial;
+    }
+}
+
+mat-cell:nth-child(6),
+mat-header-cell:nth-child(6) {
+    @media (max-width: $breakpoint-tablet) {
+        margin-left: 30px;
+        padding-left: 0;
+    }
+}
+
+mat-cell:last-child,
+mat-header-cell:last-child {
+ /*   max-width: 70px;*/
+
+    @media (max-width: $breakpoint-tablet) {
+        margin-right: 30px;
+        padding-right: 0;
+    }
+}
+
+mat-cell:nth-child(1),
+mat-cell:nth-child(2),
+mat-cell:nth-child(3),
+mat-cell:nth-child(4) {
+    @media (max-width: $breakpoint-tablet) {
+        padding-top: 25px;
+        padding-bottom: 10px;
+        min-height: 32px;
+        border-bottom: 1px solid $base-color-20;
+    }
+}
+
+mat-cell:nth-child(6),
+mat-cell:nth-child(7),
+mat-cell:nth-child(8) {
+    @media (max-width: $breakpoint-tablet) {
+        padding-top: 10px;
+        padding-bottom: 30px;
+        min-height: 32px;
+    }
+}
+
+.mat-table {
+    margin-bottom: 40px;
+    background: transparent;
+
+    button {
+        padding: 6px 11px;
+        border: none;
+        border-radius: 4px;
+        background: $green;
+        cursor: pointer;
+    }
+
+    @media (max-width: $breakpoint-tablet) {
+        margin-bottom: 20px;
+    }
+}
+
+.mat-row {
+    margin-bottom: 3px;
+    border-bottom: 0;
+    background: $black-30;
+    @media (max-width: $breakpoint-tablet) {
+        flex-wrap: wrap;
+    }
+}
+
+.mat-cell, .mat-header-cell {
+    font-size: 12px;
+    color: $base-color;
+
+    @media (max-width: $breakpoint-tablet) {
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+    }
+}
+
+.mat-header-row {
+    height: 62px;
+
+    @media (max-width: $breakpoint-tablet) {
+        display: none;
+    }
+}
+
+.__header {
+
+    &-table {
+        display: flex;
+        justify-content: center;
+        padding-top: 25px;
+
+        @media (max-width: $breakpoint-tablet) {
+            padding-bottom: 20px;
+        }
+    }
+
+    &-mobile {
+        display: none;
+
+        @media (max-width: $breakpoint-tablet) {
+            display: block;
+
+            color: $base-color-30;
+        }
+    }
+}

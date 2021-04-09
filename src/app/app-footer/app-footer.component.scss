@@ -1,0 +1,70 @@
+@import '../../styles/variables' ;
+
+:host {
+    display: block;
+    margin-top: auto;
+    padding-bottom: 48px;
+
+    @media (max-width: $breakpoint-tablet) {
+        padding-bottom: 0;
+    }
+
+    app-wallet {
+        @media (min-width: $breakpoint-tablet) {
+            display: none;
+        }
+
+        @media (max-width: $breakpoint-tablet) {
+            margin-left: -20px;
+            margin-right: -20px;
+            width: calc(100% + 40px);
+
+            &::ng-deep {
+                .__badge:first-child {
+                    display: none;
+                }
+
+                .__badge-balance {
+                    margin-right: 0;
+                    margin-left: 0;
+                    width: 40%;
+
+                    border-right: 1px solid $blue2;
+                    background: $blue;
+                }
+
+                .__badge-number {
+                    width: 60%;
+
+                    background: $blue;
+                }
+            }
+        }
+    }
+}
+
+.__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &-text {
+        font-size: 12px;
+        color: $base-color-30;
+
+        @media (max-width: $breakpoint-tablet) {
+            display: none;
+        }
+    }
+}
+
+.__social-network {
+
+    &-item + &-item {
+        padding-left: 24px;
+    }
+
+    @media (max-width: $breakpoint-tablet) {
+        display: none;
+    }
+}

@@ -1,0 +1,9 @@
+<!--<div class="__badge">
+  <img class="__badge-icon" src="../../assets/svg/eth.svg">
+  ethereum
+</div>-->
+<div class="__badge __badge-balance" *ngIf="web3Service.chainIdNumber==42"> <img class="__badge-icon" src="../../assets/svg/eth.svg"> {{ethBalance}} eth</div>
+<div class="__badge __badge-balance" *ngIf="web3Service.chainIdNumber==56"> <img class="__badge-icon" src="../../assets/svg/bsc.svg"> {{ethBalance}} bnb</div>
+<div class="__badge __badge-number" (click)='unlockWalletClick()' *ngIf="!account" style="cursor:pointer">unlock wallet</div>
+<div class="__badge __badge-number" (click)='signOutClick()' *ngIf="account"  style="cursor:pointer" title="Log out">{{account|shortAddress}}</div>
+
