@@ -6,7 +6,11 @@
   </defs>
 </svg>
 
-<h2 class="__header">Transfer</h2>
+<h2 class="__header">
+  Transfer
+  <span *ngIf="fromNetwork && fromNetwork.name=='ETH'">Kovan to BSC</span>
+  <span *ngIf="fromNetwork && fromNetwork.name=='BSC'">BSC to Kovan</span>
+</h2>
 <div class="__calculator">
   <div class="__calculator-organization">
     <!--<app-currency-details></app-currency-details>-->
@@ -43,7 +47,7 @@
         <!--<span>$???</span>-->
       </div>
       <div class="__row">
-        <div><span class="__row-total-text">Fee:</span>{{transferFee | number: '1.0-18'}}</div>
+        <div><span class="__row-total-text">Fee:</span>{{transferFee | number: '1.0-18'}} %</div>
       </div>
       <!--<div class="__row">
         <div><span class="__row-total-text">Min amount:</span>{{minAmount | number: '1.0-18'}}</div>
@@ -54,7 +58,7 @@
         <svg class="__arrow __arrow--right">
           <use xlink:href='#arrow'></use>
         </svg>
-        <svg class="__arrow __arrow--left __arrow--active">
+        <svg class="__arrow __arrow--left __arrow--active" (click)='swipeNetworkClick()'>
           <use xlink:href='#arrow'></use>
         </svg>
       </div>

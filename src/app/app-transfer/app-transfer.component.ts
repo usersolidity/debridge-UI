@@ -50,7 +50,7 @@ export class AppTransferComponent extends ComponentBase implements OnInit {
   //TODO: make with ngmodel changed
   public get outputAmount(): number {
     if (this.pairFrom) {
-      let outAmount = new BigNumber(this.inputAmount).minus(this.transferFee).toNumber();
+      let outAmount = new BigNumber(this.inputAmount).minus(new BigNumber(this.inputAmount).multipliedBy(this.transferFee)).toNumber();
       return outAmount;
     }
     return 0;
@@ -111,7 +111,7 @@ export class AppTransferComponent extends ComponentBase implements OnInit {
     //TODO: add selector chain TO 
     this.toNetwork = networks.find(n => n.chainId == parseInt(supportedChain[0]));
 
-    this.transferFee = new BigNumber(this.pairFrom.transferFee).shiftedBy(-this.pairFrom.tokenDecimals).toNumber();
+    this.transferFee = new BigNumber(this.pairFrom.transferFee).shiftedBy(-18).toNumber();
 
     this.updateUserData();
   }
@@ -297,5 +297,9 @@ export class AppTransferComponent extends ComponentBase implements OnInit {
     this.account = "";
   }
 
+  swipeNetworkClick(): void {
+    this.showInfoModal("Change network in MetaMask!");
+  }
+  
 
 }
