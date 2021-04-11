@@ -1,0 +1,16 @@
+<mat-icon *ngIf='icon'>{{ icon }}</mat-icon>
+
+<header>
+    {{ title }}
+</header>
+
+<main>
+    <p *ngIf='message'>{{ message }}</p>
+    <p *ngIf='innerHTML' [innerHTML]='innerHTML'></p>
+</main>
+
+<footer>
+    <button class='dlg-btn' (click)='onContinue()'>
+        {{ buttonOkLabel || 'Ok' }}
+    </button>
+</footer>

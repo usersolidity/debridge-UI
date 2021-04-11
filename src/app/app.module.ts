@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 
 import { AppRoutingModule } from './app-routing.module';
+import { SharedDlgModule } from './shared-dlg.module';
 import { AppComponent } from './app.component';
 import { AppHeaderComponent } from './app-header';
 import { AppLobbyComponent } from './app-lobby/app-lobby.component';
@@ -16,14 +17,15 @@ import { AppCurrencyDetailsComponent } from './app-currency-details/app-currency
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppWalletComponent } from './app-wallet/app-wallet.component';
 import { AppTransferRecordsTableComponent } from './app-transfer-records-table';
-import { DlgSwitchNetworkComponent } from './dlg-switch-network/dlg-switch-network.component';
-import { DlgSelectCoinComponent } from './dlg-select-coin/dlg-select-coin.component';
+import { DlgSwitchNetworkComponent } from './dlg-switch-network';
+import { DlgSelectCoinComponent } from './dlg-select-coin';
+import { DlgWalletComponent } from './dlg-wallet';
+import { DlgUnlockWalletComponent } from './dlg-unlock-wallet';
 
 import { BrowserStorageProvider } from '../shared/browser-storage-provider';
 import { UserSessionProvider } from '../shared/user-session-provider';
 import { EventBus } from '../shared/event-bus';
 import { Web3Service } from '../shared/web3-service';
-import { UnlockWalletComponent } from './unlock-wallet';
 import { PipesModule } from '../shared/pipes/pipes.module';
 import { FormsModule } from '@angular/forms';
 import { ServiceProxyModule } from '../service-proxies/service-proxy.module';
@@ -44,7 +46,8 @@ import { environment } from '../environments/environment';
     BrowserAnimationsModule,
     PipesModule,
     HttpClientModule,
-    ServiceProxyModule
+    ServiceProxyModule,
+    SharedDlgModule
   ],
   declarations: [
     AppComponent,
@@ -57,7 +60,8 @@ import { environment } from '../environments/environment';
     AppTransferRecordsTableComponent,
     DlgSwitchNetworkComponent,
     DlgSelectCoinComponent,
-    UnlockWalletComponent
+    DlgWalletComponent,
+    DlgUnlockWalletComponent
   ],
 
   providers: [
@@ -65,8 +69,23 @@ import { environment } from '../environments/environment';
     UserSessionProvider,
     EventBus,
     Web3Service,
-    { provide: API_BASE_URL, useValue: environment.remoteServiceBaseUrl } // выставляем url web api для проксей
+    { provide: API_BASE_URL, useValue: environment.remoteServiceBaseUrl }, // выставляем url web api для проксей
+    {
+      provide: APP_INITIALIZER,
+      useFactory: InitFactory,
+      deps: [
+        UserSessionProvider,
+        Web3Service
+      ],
+      multi: true
+  }
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+function InitFactory(userSession: UserSessionProvider, web3Service: Web3Service) {
+  return async function(): Promise<void> {
+    // Make right init things here
+  }
+}

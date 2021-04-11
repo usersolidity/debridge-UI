@@ -87,6 +87,66 @@ export class SentEventServiceProxy extends ServiceProxyBase {
         }
         return _observableOf<SentEventDTO[]>(<any>null);
     }
+
+    getAllMyTransfers(receiver: string | null | undefined, chainIdTo: number | undefined): Observable<SentEventDTO[]> {
+        let url_ = this.baseUrl + "/api/SentEvent/GetAllMyTransfers?";
+        if (receiver !== undefined && receiver !== null)
+            url_ += "receiver=" + encodeURIComponent("" + receiver) + "&";
+        if (chainIdTo === null)
+            throw new Error("The parameter 'chainIdTo' cannot be null.");
+        else if (chainIdTo !== undefined)
+            url_ += "chainIdTo=" + encodeURIComponent("" + chainIdTo) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return _observableFrom(this.transformOptions(options_)).pipe(_observableMergeMap(transformedOptions_ => {
+            return this.http.request("get", url_, transformedOptions_);
+        })).pipe(_observableMergeMap((response_: any) => {
+            return this.processGetAllMyTransfers(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllMyTransfers(<any>response_);
+                } catch (e) {
+                    return <Observable<SentEventDTO[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<SentEventDTO[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllMyTransfers(response: HttpResponseBase): Observable<SentEventDTO[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(SentEventDTO.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<SentEventDTO[]>(<any>null);
+    }
 }
 
 @Injectable()
@@ -304,6 +364,7 @@ export class SentEventDTO implements ISentEventDTO {
     submissionApproved!: boolean;
     isConfirmed!: boolean;
     isExecuted!: boolean;
+    isBurntEvent!: boolean;
 
     constructor(data?: ISentEventDTO) {
         if (data) {
@@ -332,6 +393,7 @@ export class SentEventDTO implements ISentEventDTO {
             this.submissionApproved = _data["submissionApproved"];
             this.isConfirmed = _data["isConfirmed"];
             this.isExecuted = _data["isExecuted"];
+            this.isBurntEvent = _data["isBurntEvent"];
         }
     }
 
@@ -360,6 +422,7 @@ export class SentEventDTO implements ISentEventDTO {
         data["submissionApproved"] = this.submissionApproved;
         data["isConfirmed"] = this.isConfirmed;
         data["isExecuted"] = this.isExecuted;
+        data["isBurntEvent"] = this.isBurntEvent;
         return data; 
     }
 }
@@ -381,6 +444,7 @@ export interface ISentEventDTO {
     submissionApproved: boolean;
     isConfirmed: boolean;
     isExecuted: boolean;
+    isBurntEvent: boolean;
 }
 
 export class PairEventDTO implements IPairEventDTO {

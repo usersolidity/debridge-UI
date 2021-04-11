@@ -1,11 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { NoopScrollStrategy } from '@angular/cdk/overlay';
+
+import { throwError, merge } from 'rxjs';
+import { filter, switchMap } from 'rxjs/operators';
+
 import { EventBus } from '../../shared/event-bus';
 import { UserSessionProvider } from '../../shared/user-session-provider';
 import { Web3Service } from '../../shared/web3-service';
-import { UnlockWalletComponent } from '../unlock-wallet';
+import { DlgUnlockWalletComponent } from '../dlg-unlock-wallet';
 import BigNumber from "bignumber.js";
 import { ComponentBase } from '../../shared/component-base';
+import { DlgWalletComponent } from '../dlg-wallet';
+import { AlertService } from '../shared-dlg.module';
 
 @Component({
   selector: 'app-wallet',
@@ -16,7 +23,13 @@ export class AppWalletComponent extends ComponentBase implements OnInit {
   account: string | null;
   ethBalance: number | null;
 
-  constructor(private _dialog: MatDialog, private userSessionProvider: UserSessionProvider, private eventBus: EventBus, public web3Service: Web3Service) {
+  constructor(
+    private _dialog: MatDialog,
+    private _alertSrv: AlertService,
+    private userSessionProvider: UserSessionProvider,
+    private eventBus: EventBus,
+    public web3Service: Web3Service
+  ) {
     super();
     this.account = userSessionProvider.username;
     this.ethBalance = null;
@@ -33,7 +46,8 @@ export class AppWalletComponent extends ComponentBase implements OnInit {
         catch (err) {
           console.error(err);
           if (err.name === "ChainError") {
-            this.showErrorModal(err.message);
+            this._alertSrv.show(err.message, 'error');
+            // this.showErrorModal(err.message);
           }
           this.userSessionProvider.finishSession();
         }
@@ -45,7 +59,8 @@ export class AppWalletComponent extends ComponentBase implements OnInit {
         catch (err) {
           console.error(err);
           if (err.name === "ChainError") {
-            this.showErrorModal(err.message);
+            this._alertSrv.show(err.message, 'error');
+            // this.showErrorModal(err.message);
           }
           this.userSessionProvider.finishSession();
         }
@@ -110,9 +125,10 @@ export class AppWalletComponent extends ComponentBase implements OnInit {
 
 
   async unlockWalletClick() {
-    const dialogRef = this._dialog.open(UnlockWalletComponent, {
-      //backdropClass: 'dlg-select-coin-backdrop',
-      panelClass: ['unlock-wallet-panel']
+    const dialogRef = this._dialog.open(DlgUnlockWalletComponent, {
+      backdropClass: 'dlg-unlock-wallet-backdrop',
+      panelClass: ['dlg-unlock-wallet-panel'],
+      scrollStrategy: new NoopScrollStrategy()
     });
 
     //const source = dialogRef.afterClosed();
@@ -144,5 +160,28 @@ export class AppWalletComponent extends ComponentBase implements OnInit {
     await this.web3Service.WalletDisconnect();
     location.reload();
     return;
+  }
+
+  async showWalletDlg() {
+    const dialogRef = this._dialog.open(DlgWalletComponent, {
+      backdropClass: 'dlg-wallet-backdrop',
+      panelClass: ['dlg-wallet-panel'],
+      scrollStrategy: new NoopScrollStrategy()
+    });
+
+    const source = dialogRef.afterClosed();
+    const success$ = source
+      .pipe(filter<boolean>((val) => val));
+    const error$ = source
+      .pipe(filter((val) => !val))
+      .pipe(switchMap((error) => throwError(`${error}`)));
+
+    try {
+      await merge(success$, error$).toPromise();
+    } catch (err) {
+      return;
+    }
+
+    this.signOut();
   }
 }

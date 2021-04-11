@@ -1,11 +1,24 @@
 <h2>Switch Network</h2>
 <div class="__row">
-  <div class="__row-currency __row-currency--active">
+  <div class="__row-currency" [ngClass]="{'__row-currency--active': web3Service.chainIdNumber == 42}" (click)='selectETH()'>
     <img src="../../assets/svg/eth_modal.svg" />
     <span>Ethereum</span>
   </div>
-  <div class="__row-currency">
+  <div class="__row-currency" [ngClass]="{'__row-currency--active': web3Service.chainIdNumber == 56}" (click)='selectBSC()'>
     <img src="../../assets/svg/some_cur_modal.svg" />
     <span>Binance</span>
   </div>
+  <div class="__row-currency unsupported">
+    <img src="../../assets/svg/solana.svg"/>
+    <span>Solana *</span>
+  </div>
+  <div class="__row-currency unsupported">
+    <img src="../../assets/svg/heco.svg"/>
+    <span>Heco *</span>
+  </div>
+  <div class="__row-currency unsupported">
+    <img src="../../assets/svg/polkadot-logo.svg"/>
+    <span>Polkadot *</span>
+  </div>
 </div>
+<p style="margin-top: 20px">* will be added soon</p>

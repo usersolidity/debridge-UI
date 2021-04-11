@@ -60,6 +60,10 @@ export class UserSessionProvider {
     return this.storage.getItem(this.chainKey) != undefined;
   }
 
+  public getChainKey() {
+    return this.storage.getItem(this.chainKey);
+  }
+
   /**
    * Сессия начата
    */

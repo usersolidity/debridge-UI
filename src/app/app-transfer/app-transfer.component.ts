@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { NoopScrollStrategy } from '@angular/cdk/overlay';
 import { ComponentBase } from '../../shared/component-base';
 import { EventBus } from '../../shared/event-bus';
 import { Web3Service } from '../../shared/web3-service';
@@ -10,9 +11,13 @@ import { throwError, merge } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import { DlgSelectCoinComponent } from '../dlg-select-coin';
 
+import { AlertService } from '../shared-dlg.module';
+
+import { environment } from '../../environments/environment';
 import networks from './networks.data';
-import { UnlockWalletComponent } from '../unlock-wallet';
+import { DlgUnlockWalletComponent } from '../dlg-unlock-wallet';
 import { PairEventDTO, PairsServiceProxy } from '../../service-proxies/service-proxies';
+import { UserSessionProvider } from '../../shared/user-session-provider';
 
 @Component({
   selector: 'app-transfer',
@@ -23,10 +28,12 @@ export class AppTransferComponent extends ComponentBase implements OnInit {
 
   constructor(
     private _dialog: MatDialog,
+    private _alertSrv: AlertService,
     private eventBus: EventBus,
     private pairsService: PairsServiceProxy,
     //todo: add component base with web3Service
-    private web3Service: Web3Service
+    private web3Service: Web3Service,
+    private userSessionProvider: UserSessionProvider
   ) { super() }
 
   waiting: boolean = false;
@@ -111,6 +118,7 @@ export class AppTransferComponent extends ComponentBase implements OnInit {
     //TODO: add selector chain TO 
     this.toNetwork = networks.find(n => n.chainId == parseInt(supportedChain[0]));
 
+    //TODO: get transferFee from web3
     this.transferFee = new BigNumber(this.pairFrom.transferFee).shiftedBy(-18).toNumber();
 
     this.updateUserData();
@@ -178,7 +186,7 @@ export class AppTransferComponent extends ComponentBase implements OnInit {
 
     this.web3Service.ApproveOn(this.account, this.pairFrom.tokenAddress, this.web3Service.whiteDebridgeAddress)
       .then((response: any) => {
-        this.showSuccessModal('Confirmed transaction');
+        this._alertSrv.show('Confirmed transaction');
         this.updateUserData();
       }).catch((response: any) => {
         console.info('catch');
@@ -202,8 +210,9 @@ export class AppTransferComponent extends ComponentBase implements OnInit {
     console.log(this.pairFrom);
 
     if (this.pairFrom.chainId == this.pairFrom.eventChainId) {
-      this.web3Service.SendDebridge(this.account, payableAmount, this.pairFrom.debridgeId, receiver, tokenAmount, this.pairFrom.tokenDecimals, this.chainTo).then((response: any) => {
-        this.showSuccessModal('Confirmed transaction');
+      this.web3Service.SendDebridge(this.account, payableAmount, this.pairFrom.debridgeId, receiver, tokenAmount, this.pairFrom.tokenDecimals, this.chainTo)
+      .then((response: any) => {
+        this._alertSrv.show('Confirmed transaction');
         this.updateUserData();
         //TODO: useless no records in bs
         this.eventBus.updateTransferRecords.emit();
@@ -217,7 +226,7 @@ export class AppTransferComponent extends ComponentBase implements OnInit {
     }
     else {
       this.web3Service.BurnDebridge(this.account, this.pairFrom.debridgeId, receiver, tokenAmount, this.pairFrom.tokenDecimals).then((response: any) => {
-        this.showSuccessModal('Confirmed transaction');
+        this._alertSrv.show('Confirmed transaction');
         this.updateUserData();
         //TODO: useless no records in bs
         this.eventBus.updateTransferRecords.emit();
@@ -242,7 +251,8 @@ export class AppTransferComponent extends ComponentBase implements OnInit {
   async selectCoin() {
     const dialogRef = this._dialog.open(DlgSelectCoinComponent, {
       backdropClass: 'dlg-select-coin-backdrop',
-      panelClass: ['dlg-select-coin-panel']
+      panelClass: ['dlg-select-coin-panel'],
+      scrollStrategy: new NoopScrollStrategy()
     });
     dialogRef.componentInstance.Pairs = this.allPairs.filter(t => t.chainId == this.web3Service.chainIdNumber);
 
@@ -263,9 +273,10 @@ export class AppTransferComponent extends ComponentBase implements OnInit {
   }
 
   async unlockWalletClick() {
-    const dialogRef = this._dialog.open(UnlockWalletComponent, {
-      //backdropClass: 'dlg-select-coin-backdrop',
-      panelClass: ['unlock-wallet-panel']
+    const dialogRef = this._dialog.open(DlgUnlockWalletComponent, {
+      backdropClass: 'dlg-unlock-wallet-backdrop',
+      panelClass: ['dlg-unlock-wallet-panel'],
+      scrollStrategy: new NoopScrollStrategy()
     });
 
     //const source = dialogRef.afterClosed();
@@ -297,9 +308,78 @@ export class AppTransferComponent extends ComponentBase implements OnInit {
     this.account = "";
   }
 
-  swipeNetworkClick(): void {
-    this.showInfoModal("Change network in MetaMask!");
+  async swipeNetworkClick(): Promise<boolean> {
+    // this.showInfoModal("Change network in MetaMask!");
+
+    const nodes = [environment.APP_NODE_1, environment.APP_NODE_2, environment.APP_NODE_3];
+
+    const provider = window.ethereum
+    if (provider) {
+      if (this.userSessionProvider.getIsBSC) {
+        this._alertSrv.show("Select Kovan Network in your wallet.", 'error')
+        return false;
+        //const chainId = parseInt(environment.APP_CHAIN_KOVAN_ID, 10)
+        //try {
+        //  // @ts-ignore
+        //  await provider.request({
+        //    method: 'wallet_addEthereumChain',
+        //    params: [ 
+        //      {
+        //        chainId: `0x${chainId.toString(16)}`,
+        //        chainName: 'Kovan Test Network',
+        //        nativeCurrency: {
+        //          name: 'ETH',
+        //          symbol: 'ETH',
+        //          decimals: 18,
+        //        },
+        //        rpcUrls: ["https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"],
+        //        blockExplorerUrls: ['https://kovan.etherscan.io/'],
+        //      },
+        //    ],
+        //  })
+        //  return true
+        //} catch (error) {
+        //  console.error(error)
+        //  return false
+        //}
+      }
+      else {
+        const chainId = parseInt(environment.APP_CHAIN_ID, 10)
+        try {
+          // @ts-ignore
+          await provider.request({
+            method: 'wallet_addEthereumChain',
+            params: [
+              {
+                chainId: `0x${chainId.toString(16)}`,
+                chainName: 'Binance Smart Chain Mainnet',
+                nativeCurrency: {
+                  name: 'BNB',
+                  symbol: 'bnb',
+                  decimals: 18,
+                },
+                rpcUrls: nodes,
+                blockExplorerUrls: ['https://bscscan.com/'],
+              },
+            ],
+          })
+          return true
+        } catch (error) {
+          console.error(error)
+          return false
+        }
+      }
+    } else {
+      if (this.userSessionProvider.getIsBSC) {
+        this.userSessionProvider.setETHNetwork();
+      }
+      else {
+        this.userSessionProvider.setBSCNetwork();
+      }
+      location.reload();
+      console.error("Can't setup the BSC network on metamask because window.ethereum is undefined")
+      return false
+    }
   }
-  
 
 }

@@ -101,7 +101,7 @@ export class Web3Service {
 
   async initWeb3() {
     console.log('initWeb3');
-    this.ethereumProvider = await detectEthereumProvider();
+    this.ethereumProvider = await detectEthereumProvider({ timeout: 500 });
     if (this.ethereumProvider) {
       this.web3 = new Web3(this.ethereumProvider);
 
@@ -110,6 +110,29 @@ export class Web3Service {
       console.log("matamask chainId: " + metamaskChainId);
       if (metamaskChainId != this.chainId) {
         this.setWeb3OnCustomRPC();
+      }
+      //TOOD: that = this;
+      //Reload when chain was changed in metamask (without connect wallet)
+      var that = this;
+      if (window.ethereum) {
+        window.ethereum.on('chainChanged', function (chainId: string) {
+          console.log('chainChanged');
+          console.log(chainId);
+          if (chainId === "0x1")
+            chainId = "0x01";
+          if (chainId != that.chainId) {
+            //if new chain is Ethereum 
+            if (chainId === '0x01' || chainId === '0x2a') {
+              that.userSessionProvider.setETHNetwork();
+            }
+            //if new chain is BSC
+            else if (chainId === '0x38' || chainId === '0x61') {
+              that.userSessionProvider.setBSCNetwork();
+            }
+          }
+
+          location.reload();
+        });
       }
       return;
     }
@@ -139,12 +162,12 @@ export class Web3Service {
       if (this.userSessionProvider.getIsBSC)
         this.web3 = new Web3("https://bsc-dataseed.binance.org/");
       else
-        this.web3 = new Web3("https://mainnet.infura.io/v3/24327bb89ca04f38991d4b88036b70fa");
+        this.web3 = new Web3("https://kovan.infura.io/v3/46e5f1638bb04dd4abb7f75bfd4f8898");
     }
     else {
       //BSC testnet
       if (this.userSessionProvider.getIsBSC)
-        this.web3 = new Web3("https://data-seed-prebsc-1-s1.binance.org:8545/");
+        this.web3 = new Web3("https://bsc-dataseed.binance.org/");
       else
         this.web3 = new Web3("https://kovan.infura.io/v3/46e5f1638bb04dd4abb7f75bfd4f8898");
     }
@@ -227,24 +250,24 @@ export class Web3Service {
             console.log(accounts);
             location.reload();
           })
-          window.ethereum.on('chainChanged', function (chainId: string) {
-            console.log('chainChanged');
-            console.log(chainId);
-            if (chainId === "0x1")
-              chainId = "0x01";
-            if (chainId != that.chainId) {
-              //if new chain is Ethereum 
-              if (chainId === '0x01' || chainId === '0x2a') {
-                that.userSessionProvider.setETHNetwork();
-              }
-              //if new chain is BSC
-              else if (chainId === '0x38' || chainId === '0x61') {
-                that.userSessionProvider.setBSCNetwork();
-              }
-            }
+          //window.ethereum.on('chainChanged', function (chainId: string) {
+          //  console.log('chainChanged');
+          //  console.log(chainId);
+          //  if (chainId === "0x1")
+          //    chainId = "0x01";
+          //  if (chainId != that.chainId) {
+          //    //if new chain is Ethereum 
+          //    if (chainId === '0x01' || chainId === '0x2a') {
+          //      that.userSessionProvider.setETHNetwork();
+          //    }
+          //    //if new chain is BSC
+          //    else if (chainId === '0x38' || chainId === '0x61') {
+          //      that.userSessionProvider.setBSCNetwork();
+          //    }
+          //  }
 
-            location.reload();
-          })
+          //  location.reload();
+          //})
         }
 
         //TODO: remove reload, add eventBus

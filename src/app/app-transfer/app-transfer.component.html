@@ -7,7 +7,7 @@
 </svg>
 
 <h2 class="__header">
-  Transfer
+  Transfer assets from
   <span *ngIf="fromNetwork && fromNetwork.name=='ETH'">Kovan to BSC</span>
   <span *ngIf="fromNetwork && fromNetwork.name=='BSC'">BSC to Kovan</span>
 </h2>
@@ -17,7 +17,7 @@
     <div class="app-currency-details">
       <div class="__row">
         <span class="__row-hedaer __row-left-column">Input</span>
-        <div class="__row-currency">
+        <div class="__row-currency" (click)='switchNetwork()'>
           <div *ngIf="fromNetwork">
             <div class="white_sircle">
               <img [src]="fromNetwork.img">
@@ -35,14 +35,14 @@
           <!--(click)='selectCoin()'-->
           <div>
             <div class="white_sircle">
-              <!--<img src="../../assets/svg/select_cur.svg">-->
+              <img [src]="fromCurrensySymbol|imgSymbol">
             </div>
             <span>{{fromCurrensySymbol}}</span>
           </div>
           <img src="../../assets/svg/arrow.svg">
         </div>
       </div>
-      <div class="__row">
+      <div class="__row __row-total">
         <div><span class="__row-total-text">Balance:</span>{{inputBalance | number: '1.0-18'}}</div>
         <!--<span>$???</span>-->
       </div>
@@ -53,12 +53,12 @@
         <div><span class="__row-total-text">Min amount:</span>{{minAmount | number: '1.0-18'}}</div>
       </div>-->
     </div>
-    <button class="__calculator-switch">
+    <button class="__calculator-switch"  (click)='swipeNetworkClick()'>
       <div class="__calculator-btn">
         <svg class="__arrow __arrow--right">
           <use xlink:href='#arrow'></use>
         </svg>
-        <svg class="__arrow __arrow--left __arrow--active" (click)='swipeNetworkClick()'>
+        <svg class="__arrow __arrow--left __arrow--active">
           <use xlink:href='#arrow'></use>
         </svg>
       </div>
@@ -87,7 +87,7 @@
           <!--(click)='selectCoin()'-->
           <div>
             <div class="white_sircle">
-              <!--<img src="../../assets/svg/bsc.svg">-->
+              <img [src]="toCurrensySymbol|imgSymbol">
             </div>
             <span>{{toCurrensySymbol}}</span>
           </div>
@@ -116,16 +116,10 @@
 <div class="__transfer-records">
   <mat-tab-group>
     <mat-tab label="Transit to BSC">
-      <app-transfer-records-table [selectedChainId]="56" [isPayback]="false"></app-transfer-records-table>
-    </mat-tab>
-    <mat-tab label="Payback to Kovan">
-      <app-transfer-records-table [selectedChainId]="42" [isPayback]="true"></app-transfer-records-table>
+      <app-transfer-records-table [selectedChainId]="56"></app-transfer-records-table>
     </mat-tab>
     <mat-tab label="Transit to Kovan">
-      <app-transfer-records-table [selectedChainId]="42" [isPayback]="false"></app-transfer-records-table>
-    </mat-tab>
-    <mat-tab label="Payback to BSC">
-      <app-transfer-records-table [selectedChainId]="56" [isPayback]="true"></app-transfer-records-table>
+      <app-transfer-records-table [selectedChainId]="42"></app-transfer-records-table>
     </mat-tab>
   </mat-tab-group>
 </div>

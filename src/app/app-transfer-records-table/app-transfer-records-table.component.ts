@@ -1,24 +1,25 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import {
   BehaviorSubject
 } from 'rxjs';
-import { BurntEventDTO, SentEventDTO, SentEventServiceProxy, BurntEventServiceProxy } from '../../service-proxies/service-proxies';
+import { SentEventDTO, SentEventServiceProxy, BurntEventServiceProxy } from '../../service-proxies/service-proxies';
 import { EventBus } from '../../shared/event-bus';
 import BigNumber from "bignumber.js";
-import { TransferRecordsSource } from './app-transfer-records-table.data-source';
 import { Web3Service } from '../../shared/web3-service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DlgSwitchNetworkComponent } from '../dlg-switch-network';
 import { ComponentBase } from '../../shared/component-base';
+
+import { AlertService } from '../shared-dlg.module';
 
 @Component({
   selector: 'app-transfer-records-table',
   templateUrl: './app-transfer-records-table.component.html',
   styleUrls: ['./app-transfer-records-table.component.scss']
 })
-export class AppTransferRecordsTableComponent extends ComponentBase implements OnInit {
+export class AppTransferRecordsTableComponent extends ComponentBase implements OnInit, OnDestroy {
   @Input() selectedChainId: number;
-  @Input() isPayback: boolean;
+
   //public dataSource: TransferRecordsSource;
 
   //private _columnsSbj = new BehaviorSubject<string[]>([
@@ -31,13 +32,18 @@ export class AppTransferRecordsTableComponent extends ComponentBase implements O
 
   public allEvents: Array<SentEventDTO> = [];
 
-  //public burntEvents: Array<BurntEventDTO> = [];
-
   account: string = "";
 
   web3ChainId: number;
 
-  constructor(private _dialog: MatDialog, private sentEventService: SentEventServiceProxy, private burntEventService: BurntEventServiceProxy, private eventBus: EventBus, private web3Service: Web3Service) {
+  constructor(
+    private _dialog: MatDialog,
+    private _alertSrv: AlertService,
+    private sentEventService: SentEventServiceProxy,
+    private burntEventService: BurntEventServiceProxy,
+    private eventBus: EventBus,
+    private web3Service: Web3Service
+  ) {
     super();
     this.web3ChainId = web3Service.chainIdNumber;
     //this.dataSource = new TransferRecordsSource();
@@ -78,44 +84,39 @@ export class AppTransferRecordsTableComponent extends ComponentBase implements O
     });
   }
 
+  updateTimerId: NodeJS.Timeout;
+
   async eventLogin(username: string) {
     console.log('eventLogin');
     console.log(username);
     this.account = username;
     this.UpdateData();
+
+    this.updateTimerId = setInterval(() => {
+      this.UpdateData()
+    }, this.longTimeUpdate);
+  }
+
+  async ngOnDestroy() {
+    if (this.updateTimerId)
+      clearInterval(this.updateTimerId);
   }
 
   UpdateData(): void {
     console.log('updateTransferRecords');
-    if (this.isPayback) {
-      this.burntEventService.getMy(this.account, this.selectedChainId)
-        //.finally(() => {
-        //    this.unblockUI();
-        //})
-        .subscribe(result => {
-          console.log(result);
-          this.allEvents = result;
-        },
-          error => {
-            console.error(error);
-            //this.showError(error.json().message);
-          });
-    }
-    else {
-      this.sentEventService.getMy(this.account, this.selectedChainId)
-        //.finally(() => {
-        //    this.unblockUI();
-        //})
-        .subscribe(result => {
-          console.log(result);
-          this.allEvents = result;
-        },
-          error => {
-            console.error(error);
-            //this.showError(error.json().message);
-          });
-    }
-   
+    this.sentEventService.getAllMyTransfers(this.account, this.selectedChainId)
+      //.finally(() => {
+      //    this.unblockUI();
+      //})
+      .subscribe(result => {
+        console.log(result);
+        this.allEvents = result;
+      },
+        error => {
+          console.error(error);
+          //this.showError(error.json().message);
+        });
+
   }
 
 
@@ -130,20 +131,23 @@ export class AppTransferRecordsTableComponent extends ComponentBase implements O
   eventLogout(): void {
     console.log('signOut')
     this.account = "";
+    if (this.updateTimerId) {
+      clearInterval(this.updateTimerId);
+    }
     this.allEvents = [];
   }
 
 
-  async claimClick(item: any): Promise<void> {
+  async claimClick(item: SentEventDTO): Promise<void> {
     console.log('claimClick');
     this.waiting = true;
 
 
     if (item.debridgeId && item.receiver && item.amount) {
-      if (this.isPayback) {
+      if (item.isBurntEvent) {
         this.web3Service.ClaimDebridge(this.account, item.debridgeId, item.receiver, item.amount, item.nonce).then((response: any) => {
           item.isExecuted = true;
-          this.showSuccessModal('Confirmed transaction');
+          this._alertSrv.show('Confirmed transaction');
         }).catch((response: any) => {
           console.info('catch');
           console.info(response);
@@ -155,7 +159,7 @@ export class AppTransferRecordsTableComponent extends ComponentBase implements O
       else {
         this.web3Service.MintDebridge(this.account, item.debridgeId, item.receiver, item.amount, item.nonce).then((response: any) => {
           item.isExecuted = true;
-          this.showSuccessModal('Confirmed transaction');
+          this._alertSrv.show('Confirmed transaction');
         }).catch((response: any) => {
           console.info('catch');
           console.info(response);
@@ -166,24 +170,6 @@ export class AppTransferRecordsTableComponent extends ComponentBase implements O
       }
     }
   }
-
-  //async claimBurntClick(item: BurntEventDTO): Promise<void> {
-  //  console.log('claimClick');
-  //  this.waiting = true;
-
-  //  if (item.debridgeId && item.receiver && item.amount) {
-  //    this.web3Service.ClaimDebridge(this.account, item.debridgeId, item.receiver, item.amount, item.nonce).then((response: any) => {
-  //      item.isExecuted = true;
-  //      this.showSuccessModal('Confirmed transaction');
-  //    }).catch((response: any) => {
-  //      console.info('catch');
-  //      console.info(response);
-  //    }).finally(() => {
-  //      console.info('finally');
-  //      this.waiting = false;
-  //    });
-  //  }
-  //}
 
   switchNetworkClick() {
     this._dialog.open(DlgSwitchNetworkComponent, {

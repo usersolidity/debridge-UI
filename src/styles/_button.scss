@@ -14,7 +14,12 @@
 
     font-weight: 600;
     background: $green;
+    outline: none;
     cursor: pointer;
+
+    &:hover {
+        background: white;
+    }
 
     @media (max-width: $breakpoint-tablet) {
         padding-top: 9px;

@@ -13,10 +13,21 @@
   font-size: 18px;
   line-height: 24px;
   color: $base-color;
-  background-color: $pink5;
+  background-color: #160c25;
+  outline: none;
 
   @media (max-width: $breakpoint-tablet) {
     padding-left: 15px;
     height: 40px;
   }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }

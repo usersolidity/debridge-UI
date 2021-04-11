@@ -1,0 +1,12 @@
+<app-alert
+    [icon]='data.icon'
+    [title]='data.title'
+    [message]='data.message'
+    [innerHTML]='data.innerHTML'
+    [buttonOkLabel]='data.buttonOkLabel'
+
+    (close)='onClose()'
+></app-alert>
+<button class='dlg-btn--close' type='button' (click)='onClose()'>
+    <mat-icon>close</mat-icon>
+</button>

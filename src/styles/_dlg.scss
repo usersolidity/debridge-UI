@@ -1,0 +1,152 @@
+@import '../styles/variables';
+
+.dlg-custom-backdrop,
+.dlg-select-coin-backdrop, 
+.dlg-unlock-wallet-backdrop,
+.dlg-wallet-backdrop {
+  background: $black-40;
+  backdrop-filter: blur(25px);
+
+  @media (max-width: $breakpoint-tablet) {
+      background: $base-color-20;
+  }
+}
+
+.dlg-custom-panel,
+.dlg-select-coin-panel,
+.dlg-unlock-wallet-panel,
+.dlg-wallet-panel {
+  min-width: 400px;
+
+  .mat-dialog-container {
+    position: relative;
+    padding: 30px;
+    border-radius: 40px;
+
+    color: white;
+    background: $purple2-60; 
+  }
+
+  h2 {
+    font-weight: normal;
+  }
+
+  header {
+    display: flex;
+    justify-content: center;
+    padding: 0 20px;
+    padding-bottom: 0;
+  }
+
+  .__title {
+    padding-bottom: 20px;
+    font-size: 24px;
+    line-height: 31px;
+  }
+
+  .dlg-btn--close,
+  .__close {
+    position: absolute;
+    right: 20px;
+    padding: 0;
+
+    border: none;
+    color: $green;
+    background: transparent;
+
+    &:hover,
+    &:focus,
+    &:active {
+      outline: none;
+    }
+  }
+
+  .dlg-btn--close {
+    top: 0;
+    right: 0;
+  }
+
+  .dlg-btn,
+  .__close-btn {
+    margin: auto;
+    margin-top: 40px;
+    width: 100%;
+    height: 40px;
+
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: $black;
+    border-radius: 10px;
+    border: none;
+    background-color: $green;
+
+    @media (max-width: $breakpoint-tablet) {
+        margin-top: 20px;
+    }
+  }
+
+  .dlg-btn {
+    margin-top: 0px;
+  }
+
+  section {
+    padding: 24px;
+  }
+
+  .__list {
+    display: flex;
+    flex-direction: column;
+
+    &-item {
+      -webkit-box-align: center;
+      align-items: center;
+      border: 0px;
+      border-radius: 16px;
+      cursor: pointer;
+      display: inline-flex;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      -webkit-box-pack: center;
+      justify-content: center;
+      letter-spacing: 0.03em;
+      line-height: 1;
+      opacity: 1;
+      outline: 0px;
+      /* transition: background-color 0.2s ease 0s;*/
+      height: 48px;
+      padding: 0px 24px;
+      background-color: rgba(107, 127, 239, 0.4);
+      box-shadow: none;
+      color: white;
+      margin-bottom: 8px;
+
+      &:hover,
+      &:focus{
+        background-color: rgba(107, 127, 239, 0.7);
+      }
+    }
+
+    &-text {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.5;
+      margin-right: 16px;
+    }
+  }
+
+  @media (max-width: 520px) {
+    position: absolute !important;
+    bottom: 0;
+    max-width: 100vw !important;
+    min-width: auto;
+    width: 100%;
+
+    .mat-dialog-container {
+      min-width: initial;
+      width: 100%;
+      border-radius: 40px 40px 0 0;
+    }
+  }
+}

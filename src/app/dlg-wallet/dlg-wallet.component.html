@@ -1,0 +1,12 @@
+<header>
+    <span class="__title">Your wallet</span>
+    <button mat-button class="__close" [mat-dialog-close]>
+        <mat-icon>close</mat-icon>
+    </button>
+</header>
+<section>
+  <span class="__wallet">{{account}}</span>
+    <button mat-button class="__close-btn" [mat-dialog-close]='true'>
+        Logout
+    </button>
+</section>

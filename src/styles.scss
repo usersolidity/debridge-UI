@@ -38,6 +38,7 @@ $debridge-ui-theme: mat-light-theme((
 @import './styles/button';
 @import './styles/input';
 @import './styles/select';
+@import './styles/dlg';
 @import './styles/functions';
 
 html, body {
@@ -49,6 +50,10 @@ html, body {
     height: 100%;
     font-family: "IBM Plex Mono", sans-serif;
     overflow-x: hidden;
+}
+
+body.swal2-shown.swal2-height-auto {
+    height: 100% !important;
 }
 
 h2 {
@@ -73,7 +78,7 @@ h2 {
     display: flex;
     justify-content: center;
     margin-right: 8px;
-    padding: 6px;
+    padding: 4px;
     width: 24px;
     height: 24px;
     box-sizing: border-box;

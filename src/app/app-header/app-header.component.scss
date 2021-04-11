@@ -17,7 +17,7 @@
     }
 
     app-wallet {
-        @media (max-width: 1500px) {
+        @media (max-width: 768px) {
             display: none;
         }
     }
@@ -26,6 +26,7 @@
 .__left-block {
     position: relative;
     z-index: 10;
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -40,7 +41,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-left: 140px;
+    margin-left: auto;
 
     @media (max-width: 1120px) {
         padding-left: 40px;
